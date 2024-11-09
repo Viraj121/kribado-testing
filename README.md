@@ -27,17 +27,6 @@ This project includes a variety of test cases to ensure the functionality of the
 
 *   **Description**: Performs a comprehensive end-to-end test that simulates a user's entire journey through the application:
     
-    1.  Logging in with valid credentials.
-        
-    2.  Selecting a doctor.
-        
-    3.  Adding patient details.
-        
-    4.  Answering health-related questions.
-        
-    5.  Validating and downloading the score.
-        
-    6.  Taking another test.
         
 *   **Expected Outcome**: The flow should run seamlessly without errors, ensuring that all pages and processes function as expected.
     
