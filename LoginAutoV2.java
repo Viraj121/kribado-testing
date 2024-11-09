@@ -112,16 +112,6 @@ public class LoginAutoV2 {
     }
 
     @Test
-    public void testEndToEndFlow() throws InterruptedException {
-        login("cv001", "indigital");
-        selectDoctor("yogesh doc");
-        addPatient("John Doe", "30", "Male");
-        answerQuestions();
-        validateAndDownloadScore();
-        takeAnotherTest();
-    }
-
-    @Test
     public void testInvalidLogin() throws InterruptedException {
         login("invalidUser", "invalidPass");
         Thread.sleep(2000);
@@ -130,6 +120,16 @@ public class LoginAutoV2 {
         driver.findElement(By.xpath("//button[normalize-space()='OK']")).click();
         Thread.sleep(2000);
         Assert.assertEquals(error, "Login Failed");
+    }
+
+    @Test
+    public void testEndToEndFlow() throws InterruptedException {
+        login("cv001", "indigital");
+        selectDoctor("yogesh doc");
+        addPatient("John Doe", "30", "Male");
+        answerQuestions();
+        validateAndDownloadScore();
+        takeAnotherTest();
     }
 
     @Test
@@ -142,6 +142,7 @@ public class LoginAutoV2 {
         Thread.sleep(2000);
         addPatient("","","");
 
+
         verifyEmptyFieldValidation(By.cssSelector("#patientName"), "Please fill out this field.");
         Thread.sleep(2000);
 
@@ -149,9 +150,59 @@ public class LoginAutoV2 {
         verifyEmptyFieldValidation(By.cssSelector("#patientAge"), "Please fill out this field.");
 
         Thread.sleep(2000);
-//        addPatient("okayyy","10","");
-////        driver.findElement(By.cssSelector("#addPatientForm > button")).click();
-//        Thread.sleep(2000);
-//        verifyEmptyFieldValidation(By.xpath("//*[@id=\"addPatientForm\"]/div[3]/div[1]/label"), "Please select one of these options.");
+
+        driver.navigate().refresh();
+
+        // Enter data for name and age but leave gender field unselected
+        WebElement patientName = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#patientName")));
+        patientName.sendKeys("John Doe");
+
+        WebElement patientAge = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#patientAge")));
+        patientAge.sendKeys("30");
+        Thread.sleep(1000);
+
+        driver.findElement(By.cssSelector("#addPatientForm > button")).click();
+        Thread.sleep(2000);
+        verifyEmptyFieldValidation(By.xpath("//*[@id=\"male\"]"), "Please select one of these options.");
+        Thread.sleep(1000);
     }
+
+    @Test
+    public void testAgeFieldValidation() throws InterruptedException {
+        Thread.sleep(1000);
+        login("cv001", "indigital");
+        Thread.sleep(1000);
+        selectDoctor("yogesh doc");
+        Thread.sleep(1000);
+        // Test with age less than 1
+        addPatient("Joh", "0", "Male");
+        verifyEmptyFieldValidation(By.cssSelector("#patientAge"), "Value must be greater than or equal to 1");
+
+        // Test with age greater than 130
+        addPatient(" D", "131", "Male");
+        verifyEmptyFieldValidation(By.cssSelector("#patientAge"), "Value must be less than or equal to 130");
+
+        // Test with non-numeric input
+        addPatient(" Vicky", "abc", "Male");
+        verifyEmptyFieldValidation(By.cssSelector("#patientAge"), "Please enter a valid number");
+
+        // Test with valid minimum age boundary
+        addPatient("", "1", "Male");
+        submitAndVerifyNoValidationError();  // Verify form submission without errors
+
+        // Test with valid maximum age boundary
+        addPatient("", "130", "Male");
+        submitAndVerifyNoValidationError();  // Verify form submission without errors
+    }
+
+    // Helper method to submit the form and check for validation
+    private void submitAndVerifyNoValidationError() {
+        WebElement submitButton = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#addPatientForm > button")));
+        submitButton.click();
+
+        // Assuming validation message is displayed when there's an error
+        boolean hasValidationError = !driver.findElements(By.cssSelector(".validation-message")).isEmpty();
+        Assert.assertFalse(hasValidationError, "Form submission should be successful, but validation error is displayed!");
+    }
+
 }
