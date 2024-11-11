@@ -6,14 +6,14 @@ This project includes a variety of test cases to ensure the functionality of the
 **Login Tests**
 ---------------
 
-### testEmptyFieldsLogin()
+### `testEmptyFieldsLogin()` 
 
 *   **Description**: Verifies that the login page prompts an error when both the username and password fields are left empty.
     
 *   **Expected Outcome**: The appropriate error message "Please fill out this field." should appear for both the username and password fields.
     
 
-### testInvalidLogin()
+### `testInvalidLogin()`
 
 *   **Description**: Tests the scenario where invalid credentials (username and password) are entered.
     
@@ -23,7 +23,7 @@ This project includes a variety of test cases to ensure the functionality of the
 **End-to-End Flow**
 -------------------
 
-### testEndToEndFlow()
+### `testEndToEndFlow()`
 
 *   **Description**: Performs a comprehensive end-to-end test that simulates a user's entire journey through the application:
     
@@ -34,14 +34,14 @@ This project includes a variety of test cases to ensure the functionality of the
 **Add Patient Page**
 --------------------
 
-### testEmptyFieldsAddPatient()
+### `testEmptyFieldsAddPatient()`
 
 *   **Description**: Verifies that validation messages are displayed when attempting to add a patient with empty fields (name, age, or gender).
     
 *   **Expected Outcome**: The application should prompt the user to fill out the missing fields with appropriate error messages.
     
 
-### testAgeFieldValidation()
+### `testAgeFieldValidation()`
 
 *   **Description**: Ensures that the age field works as expected with:
     
@@ -54,3 +54,12 @@ This project includes a variety of test cases to ensure the functionality of the
     *   Valid age inputs (should submit the form successfully).
         
 *   **Expected Outcome**: The application should correctly validate age inputs according to specified rules and boundaries, providing the right error messages or allowing successful form submission.
+
+Health Questionnaire Page 
+--------------------
+
+### `testHealthQuestionnaireValidation()`
+
+*   **Description**: Verifies that the Health Questionnaire page functions correctly when all questions (Waist Circumference, Physical Activity, and Family History of Diabetes) are answered and submitted.
+
+*   **Expected Outcome**: The form should be successfully submitted without any validation errors, and no error message should be displayed.
