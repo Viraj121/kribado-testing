@@ -106,9 +106,12 @@ public class LoginAutoV2 {
     // Test cases
 
     @Test
-    public void testEmptyFieldsLogin() {
+    public void testEmptyFieldsLogin() throws InterruptedException{
         login("", "");
         verifyEmptyFieldValidation(By.xpath("//*[@id='username']"), "Please fill out this field.");
+        Thread.sleep(1000);
+        login(" cv001","");
+        verifyEmptyFieldValidation(By.xpath("//*[@id='pass']"), "Please fill out this field.");
     }
 
     @Test
@@ -123,32 +126,23 @@ public class LoginAutoV2 {
     }
 
     @Test
-    public void testEndToEndFlow() throws InterruptedException {
-        login("cv001", "indigital");
-        selectDoctor("yogesh doc");
-        addPatient("John Doe", "30", "Male");
-        answerQuestions();
-        validateAndDownloadScore();
-        takeAnotherTest();
-    }
-
-    @Test
     public void testEmptyFieldsAddPatient() throws InterruptedException {
 
 
         login("cv001", "indigital");
         Thread.sleep(2000);
+
+
         selectDoctor("yogesh doc");
         Thread.sleep(2000);
+
+
         addPatient("","","");
-
-
         verifyEmptyFieldValidation(By.cssSelector("#patientName"), "Please fill out this field.");
         Thread.sleep(2000);
 
         addPatient("OK","","");
         verifyEmptyFieldValidation(By.cssSelector("#patientAge"), "Please fill out this field.");
-
         Thread.sleep(2000);
 
         driver.navigate().refresh();
@@ -204,5 +198,38 @@ public class LoginAutoV2 {
         boolean hasValidationError = !driver.findElements(By.cssSelector(".validation-message")).isEmpty();
         Assert.assertFalse(hasValidationError, "Form submission should be successful, but validation error is displayed!");
     }
+
+    @Test
+    public void testHealthQuestionnaireValidation() throws InterruptedException {
+        login("cv001", "indigital");
+        Thread.sleep(2000);
+        selectDoctor("yogesh doc");
+        Thread.sleep(2000);
+        addPatient("John Doe", "30", "Male");
+        Thread.sleep(2000);
+
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"waistOptionsMale\"]/div[1]/label"))).click();
+        Thread.sleep(1000);
+
+        driver.findElement(By.cssSelector("#submit-button")).click();
+        Thread.sleep(2000);
+
+        // Verify that the error message appears because the third question was not answered
+        String errorMessage = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"swal2-title\"]"))).getText();
+        Assert.assertEquals(errorMessage, "Error!", "Error message was not displayed as expected!");
+
+        driver.findElement(By.xpath("//button[normalize-space()='OK']")).click();
+    }
+
+    @Test
+    public void testEndToEndFlow() throws InterruptedException {
+        login("cv001", "indigital");
+        selectDoctor("yogesh doc");
+        addPatient("John Doe", "30", "Male");
+        answerQuestions();
+        validateAndDownloadScore();
+        takeAnotherTest();
+    }
+
 
 }
