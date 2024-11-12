@@ -3,6 +3,10 @@
 
 This project includes a variety of test cases to ensure the functionality of the application across multiple pages and scenarios. Below is a breakdown of the key test cases and their purpose:
 
+
+https://github.com/user-attachments/assets/d56c5967-2872-4c34-a7f2-6289fe36c4b8
+
+
 **Login Tests**
 ---------------
 
